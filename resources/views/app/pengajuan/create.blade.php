@@ -59,7 +59,6 @@
             <div class="invalid-feedback">{{ $message }}</div>
           @enderror
         </div>
-        
       <button class="btn btn-info my-3 mr-1">
         <i class="fa fa-angle-left"></i>
         <a href="{{ route('app_pengajuan.index') }}" class="text-white text-decoration-none">kembali</a>

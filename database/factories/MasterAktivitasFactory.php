@@ -18,6 +18,7 @@ class MasterAktivitasFactory extends Factory
     {
         return [
             'ma_nama_aktivitas' => $this->faker->name(),
+            'ma_category_aktivitas' => $this->faker->name(),
         ];
     }
 }

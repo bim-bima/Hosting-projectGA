@@ -15,4 +15,8 @@ class Asset extends Model
     {
         return $this->belongsTo('App\Models\MasterLokasiAsset', 'as_mla_id');
     }
+    public function categoryasset()
+    {
+        return $this->belongsTo('App\Models\MasterCategoryAsset', 'as_mca_id');
+    }
 }

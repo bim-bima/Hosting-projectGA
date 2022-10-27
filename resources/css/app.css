@@ -23,8 +23,23 @@ body{
 	background-position: center;
 	background-size: cover;
 }
-.register-image{
-	background-image: url("/public/images/register-3.jpg");
+.bg-login-left{
+	background-image: url("/public/images/plan.png");
+	background-position: center;
+	background-size: cover;
+}
+.bg-login-right{
+	background-image: url("/public/images/Date.png");
+	background-position: center;
+	background-size: cover;
+}
+.register-image-left{
+	background-image: url("/public/images/plan2.png");
+	background-position: center;
+	background-size: cover;
+}
+.register-image-right{
+	background-image: url("/public/images/Date.png");
 	background-position: center;
 	background-size: cover;
 }

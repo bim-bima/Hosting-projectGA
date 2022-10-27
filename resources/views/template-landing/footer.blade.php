@@ -1,3 +1,4 @@
+@include('template-landing.head')
 <!-- ======= Footer ======= -->
 <footer id="footer">
 
@@ -15,23 +16,25 @@
       </div>
     </div> --}}
 
-    <div class="footer-top">
+    <div class="footer-top pb-2">
       <div class="container">
-        <div class="row">
+        <div class="row justify-content-around">
 
-          <div class="col-lg-3 col-md-6 footer-contact">
+          <div class="col-lg-3 col-md-6 footer-contact text-center">
             <h3>General Affair<span>.</span></h3>
           </div>
 
-          <div class="col-lg-3 col-md-6 footer-links">
+          <div class="col-lg-3 col-md-6 footer-links text-center justify-content-center">
             <h4>Useful Links</h4>
             <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+              <li class="ms-5 ps-5">
+                <i class="bx bx-chevron-right"></i> 
+                <a href="">Home</a>
+              </li>
             </ul>
           </div>
 
-          <div class="col-lg-3 col-md-6 footer-links">
+          {{-- <div class="col-lg-3 col-md-6 footer-links">
             <h4>Our Services</h4>
             <ul>
               <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
@@ -49,15 +52,15 @@
               <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
               <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
             </div>
-          </div>
+          </div> --}}
 
         </div>
       </div>
     </div>
 
-    <div class="container py-4 text-center">
-      <div class="copyright text-center">
-        &copy; Copyright <strong><span>General Affair 2022</span></strong>
+    <div class="container py-4">
+      <div class="copyright w-100 text-center">
+        <p>&copy; Copyright <strong><span>General Affair 2022</span></strong></p> 
       </div>
     </div>
   </footer><!-- End Footer -->

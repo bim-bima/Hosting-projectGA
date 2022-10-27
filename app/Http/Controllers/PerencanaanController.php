@@ -15,13 +15,15 @@ class PerencanaanController extends Controller
 {
     public function index()
     {
+        $cek = Perencanaan::count();
         $dataperencanaan = Perencanaan::paginate(5);
-        return view('app.perencanaan.index', compact(['dataperencanaan']));
+        return view('app.perencanaan.index', compact(['dataperencanaan','cek']));
     }   
     public function store(Request $request)
     {
         $request->validate([
-        // 'mp_nama' => 'required|min:5|max:15',
+        'ap_tahun' => 'required',
+        'ap_tahun' => 'required|min:4|max:4|after:2021',
         ]);
         $dataperencanaan = new Perencanaan();
         $dataperencanaan->ap_bulan = $request->ap_bulan;
@@ -62,6 +64,18 @@ class PerencanaanController extends Controller
         }
         return view('app.aktivitas.index', ['events' => $events], compact(['perencanaan','maktivitas']) );
     }
+
+    public function edit($id)
+        {
+            $perencanaan = Perencanaan::find($id);
+            $waktu = $perencanaan->ap_tahun.$perencanaan->ap_bulan;
+            $listaktivitas = Aktivitas::all();
+            $list = DB::table("app_aktivitas")->where("start_date", 'LIKE', '%'.$waktu.'%')->get();
+            $cek = Aktivitas::where("start_date", 'LIKE', '%'.$waktu.'%')->count();
+
+         return view('app.perencanaan.list',compact('list','cek'));
+        }
+    
     public function destroy($id)
     {
         $perencanaan = Perencanaan::find($id);

@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Pengajuan;
 use App\Models\MasterVendor;
 use App\Models\MasterPic;
+use App\Models\MasterJenisPengajuan;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\DB;
+
 
 class PengajuanController extends Controller
 {
@@ -17,8 +20,14 @@ class PengajuanController extends Controller
         */
         public function index()
         {
-            $datapengajuan = Pengajuan::with('vendor','pic')->paginate(4);
-            return view('app.pengajuan.index', compact(['datapengajuan']));
+            $cek = pengajuan::count();
+            $datapengajuan = Pengajuan::all();
+            $vendor = MasterVendor::all();
+            $pic = MasterPic::all();
+            $jenispengajuan = MasterJenisPengajuan::all();
+            $ajuan = Pengajuan::where('ap_status', 'Menunggu Persetujuan')->get();
+            $setuju = Pengajuan::where('ap_status', 'setujui')->with('vendor')->get();
+            return view('app.pengajuan.index', compact(['datapengajuan','vendor','pic','jenispengajuan','setuju','ajuan','cek']));
         }
         /**
         * Show the form for creating a new resource.
@@ -27,9 +36,7 @@ class PengajuanController extends Controller
         */
         public function create()
         {
-        $vendor = MasterVendor::all();
-        $pic = MasterPic::all();
-        return view('app.pengajuan.create', compact(['vendor','pic']));
+
         }
         /**
         * Store a newly created resource in storage.
@@ -40,24 +47,26 @@ class PengajuanController extends Controller
         public function store(Request $request)
         {
         $request->validate([
-        'ap_nama_pengajuan' => 'required|min:5|max:200',
-        'ap_jenis_pengajuan' => 'required|min:5|max:200',
-        'ap_mv_id' => 'nullable',
-        'ap_biaya' => 'nullable',
-        'ap_catatan' => 'required|min:5|max:500',
-        'ap_tanggal_pengadaan' => 'nullable',
-        'ap_mp_id' => 'nullable',
+        'nama_pengajuan'     => 'required|min:5|max:200',
+        'jenis_pengajuan'    => 'required',
+        'vendor'             => 'required',
+        'biaya'              => 'required|min:4|max:11|regex:/^[0-9]+$/',
+        'catatan'            => 'required',
+        'tanggal_pengadaan'  => 'required|after:today',
+        'ap_status'          => 'nullable',
         ]);
+
         $pengajuan = new Pengajuan();
-        $pengajuan->ap_nama_pengajuan = $request->ap_nama_pengajuan;
-        $pengajuan->ap_jenis_pengajuan = $request->ap_jenis_pengajuan;
-        $pengajuan->ap_mv_id = $request->ap_mv_id;
-        $pengajuan->ap_biaya = $request->ap_biaya;
-        $pengajuan->ap_catatan = $request->ap_catatan;
-        $pengajuan->ap_tanggal_pengadaan = $request->ap_tanggal_pengadaan;
-        $pengajuan->ap_mp_id = $request->ap_mp_id;
+        $pengajuan->ap_nama_pengajuan = $request->nama_pengajuan;
+        $pengajuan->ap_mjp_id = $request->jenis_pengajuan;
+        $pengajuan->ap_mv_id = $request->vendor;
+        $pengajuan->ap_biaya = $request->biaya;
+        $pengajuan->ap_catatan = $request->catatan;
+        $pengajuan->ap_tanggal_pengadaan = $request->tanggal_pengadaan;
+        $pengajuan->ap_status = 'Menunggu Persetujuan';
+        $pengajuan->ap_reason = $request->ap_reason;
         $pengajuan->save();
-        Alert::success('Berhasil', 'Data Berhasil Ditambahkan');
+        Alert::success('Berhasil', 'Data Berhasil Diajukan');
         return redirect()->route('app_pengajuan.index');
         }
         /**
@@ -66,21 +75,19 @@ class PengajuanController extends Controller
         * @param  \App\MasterPic  $pic
         * @return \Illuminate\Http\Response
         */
+        public function update(Request $request, $id)
+        {
+        $setujui = Pengajuan::find($id);
+        $setujui->ap_status = $request->ap_status;
+        $setujui->ap_reason = $request->ap_reason;
+        $setujui->save();
+        Alert::success('Berhasil', 'Pengajuan Berhasil Dikirim');
+        return redirect()->route('app_pengajuan.index');
+        }
         // public function show(MasterPic $pic)
         // {
         // return view('',compact(''));
         // }
-        /**
-        * Show the form for editing the specified resource.
-        *
-        * @param  \App\MasterPic  $pic
-        * @return \Illuminate\Http\Response
-        */
-        public function edit($id)
-        {
-            $pengajuan = Pengajuan::find($id);
-            return view('app.pengajuan.edit',compact('pengajuan'));
-        }
         /**
         * Update the specified resource in storage.
         *
@@ -88,32 +95,19 @@ class PengajuanController extends Controller
         * @param  \App\MasterPic  $pic
         * @return \Illuminate\Http\Response
         */
-        public function update(Request $request, $id)
+        public function show($id)
         {
-        $request->validate([
-        'mp_nama' => 'required|min:5|max:50',
-        ]);
-        $pic = MasterPic::find($id);
-        $pic->mp_nama = $request->mp_nama;
-        $pic->save();
-        Alert::success('Berhasil', 'Data Berhasil Diedit');
-        return redirect()->route('master_pic.index');
+        $pengajuan = Pengajuan::find($id);
+        return view('app.pengajuan.show', compact(['pengajuan']));
         }
-        /**
-        * Remove the specified resource from storage.
-        *
-        * @param  \App\Company  $company
-        * @return \Illuminate\Http\Response
-        */
+
         public function destroy($id)
         {
-            $id = MasterPic::find($id);
-            $id->delete();
-        // Alert::success('Berhasil', 'Data Berhasil Dihapus');
-        // return redirect()->route('master_pic.index');
-        return response()->json(['status' => 'Data Berhasil di hapus!']);
-
-
+        $datapengajuan = Pengajuan::find($id);
+        $datapengajuan->delete();
+          //   Alert::success('Berhasil', 'Data Berhasil Dihapus');
+        //   return redirect()->route('app_asset.index'); 
+        return response()->json(['status' => 'Data Berhasil di hapus!']);   
         }
 }
 

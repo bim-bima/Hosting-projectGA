@@ -21,6 +21,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{{asset ('template/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{asset ('template/img/icon.png') }}"/>
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])

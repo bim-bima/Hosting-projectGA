@@ -15,8 +15,9 @@ class MasterLokasiAssetController extends Controller
         */
         public function index()
         {
-            $datalokasiasset = MasterLokasiAsset::paginate(4);
-            return view('master.masterlokasiasset.index', compact(['datalokasiasset']));
+            $cek = MasterLokasiAsset::count();
+            $datalokasiasset = MasterLokasiAsset::all();
+            return view('master.masterlokasiasset.index', compact(['datalokasiasset','cek']));
         }
         /**
         * Show the form for creating a new resource.
@@ -36,7 +37,7 @@ class MasterLokasiAssetController extends Controller
         public function store(Request $request)
         {
         $request->validate([
-        'mla_lokasi_asset' => 'required|min:5|max:100',
+        'mla_lokasi_asset' => 'required|max:200',
         ]);
         $masterlokasiasset = new MasterLokasiAsset();
         $masterlokasiasset->mla_lokasi_asset = $request->mla_lokasi_asset;
@@ -50,7 +51,7 @@ class MasterLokasiAssetController extends Controller
         * @param  \App\MasterPic  $pic
         * @return \Illuminate\Http\Response
         */
-        public function show(MasterLokasiAsset $pic)
+        public function show(MasterPic $pic)
         {
         // return view('',compact(''));
         }
@@ -76,7 +77,7 @@ class MasterLokasiAssetController extends Controller
         public function update(Request $request, $id)
         {
         $request->validate([
-        'mla_lokasi_asset' => 'required|min:5|max:100',
+        'mla_lokasi_asset' => 'required|max:200',
         ]);
         $lokasiasset = MasterLokasiAsset::find($id);
         $lokasiasset->mla_lokasi_asset = $request->mla_lokasi_asset;

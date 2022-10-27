@@ -36,7 +36,7 @@ class MasterCategoryBarangController extends Controller
         public function store(Request $request)
         {
         $request->validate([
-        'mcb_category' => 'required|min:5|max:100',
+        'mcb_category' => 'required|min:3|max:100',
         ]);
         $masterCategorybarang = new MasterCategoryBarang();
         $masterCategorybarang->mcb_category = $request->mcb_category;
@@ -76,7 +76,7 @@ class MasterCategoryBarangController extends Controller
         public function update(Request $request, $id)
         {
         $request->validate([
-        'mcb_category' => 'required|min:5|max:100',
+        'mcb_category' => 'required|min:3|max:100',
         ]);
         $categorybarang = MasterCategoryBarang::find($id);
         $categorybarang->mcb_category = $request->mcb_category;

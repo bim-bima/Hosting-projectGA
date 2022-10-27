@@ -15,8 +15,9 @@ class MasterAktivitasController extends Controller
         */
         public function index()
         {
-            $dataaktivitas = MasterAktivitas::paginate(4);
-            return view('master.masteraktivitas.index', compact(['dataaktivitas']));
+            $cek = MasterAktivitas::count();
+            $dataaktivitas = MasterAktivitas::all();
+            return view('master.masteraktivitas.index', compact(['dataaktivitas','cek']));
         }
         /**
         * Show the form for creating a new resource.
@@ -36,10 +37,12 @@ class MasterAktivitasController extends Controller
         public function store(Request $request)
         {
         $request->validate([
-        'ma_nama_aktivitas' => 'required|min:5|max:30',
+        'ma_nama_aktivitas' => 'required',
+        'ma_category_aktivitas' => 'required|max:200',
         ]);
         $masteraktivitas = new MasterAktivitas();
         $masteraktivitas->ma_nama_aktivitas = $request->ma_nama_aktivitas;
+        $masteraktivitas->ma_category_aktivitas = $request->ma_category_aktivitas;
         $masteraktivitas->save();
         Alert::success('Berhasil', 'Data Berhasil Ditambahkan');
         return redirect()->route('master_aktivitas.index');
@@ -50,7 +53,7 @@ class MasterAktivitasController extends Controller
         * @param  \App\MasterPic  $pic
         * @return \Illuminate\Http\Response
         */
-        public function show(MasterAktivitas $pic)
+        public function show(MasterPic $pic)
         {
         // return view('',compact(''));
         }
@@ -76,10 +79,12 @@ class MasterAktivitasController extends Controller
         public function update(Request $request, $id)
         {
         $request->validate([
-        'ma_nama_aktivitas' => 'required|min:5|max:20',
+        'ma_nama_aktivitas' => 'required',
+        'ma_category_aktivitas' => 'required|max:200',
         ]);
         $aktivitas = MasterAktivitas::find($id);
         $aktivitas->ma_nama_aktivitas = $request->ma_nama_aktivitas;
+        $aktivitas->ma_category_aktivitas = $request->ma_category_aktivitas;
         $aktivitas->save();
         Alert::success('Berhasil', 'Data Berhasil Diedit');
         return redirect()->route('master_aktivitas.index');

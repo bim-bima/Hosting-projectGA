@@ -9,7 +9,13 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
     <!-- Sidebar -->
+    @if(auth()->user()->level == "general-affair")
     @include('template.sidebar')
+    @endif
+
+    @if(auth()->user()->level == "management")
+    @include('template.sidebar')
+    @endif
     <!-- End of Sidebar -->
 
     {{-- sweet alert --}}
@@ -25,7 +31,7 @@
         <!-- End of Topbar -->
 
         <!-- Begin Page Content -->
-        <div class="container-fluid">
+        <div class="container-fluid px-sm-2 px-0">
             <!-- Page Heading -->
             @yield('content')
         </div>

@@ -15,8 +15,9 @@ class MasterStatusFollowupController extends Controller
         */
         public function index()
         {
-            $datastatusfollowup = MasterStatusFollowup::paginate(4);
-            return view('master.masterstatusfollowup.index', compact(['datastatusfollowup']));
+            $cek = MasterStatusFollowup::count();
+            $datastatusfollowup = MasterStatusFollowup::paginate(8);
+            return view('master.masterstatusfollowup.index', compact(['datastatusfollowup','cek']));
         }
         /**
         * Show the form for creating a new resource.
@@ -36,7 +37,7 @@ class MasterStatusFollowupController extends Controller
         public function store(Request $request)
         {
         $request->validate([
-        'msf_status' => 'required|min:5|max:15',
+        'msf_status' => 'required|min:5|max:50',
         ]);
         $masterstatusfollowup = new MasterStatusFollowup();
         $masterstatusfollowup->msf_status = $request->msf_status;

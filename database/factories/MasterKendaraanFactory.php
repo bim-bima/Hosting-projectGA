@@ -22,8 +22,6 @@ class MasterKendaraanFactory extends Factory
             'mk_jenis' => $this->faker->name(),
             'mk_merk' => $this->faker->name(),
             'mk_warna' => $this->faker->name(),
-            'mk_perlengkapan' => $this->faker->name(),
-            'mk_status' => $this->faker->name(),
             'mk_bahan_bakar' => $this->faker->name(),
             'mk_kilometer' => $this->faker->title(),
             'mk_kondisi_lain' => $this->faker->title()

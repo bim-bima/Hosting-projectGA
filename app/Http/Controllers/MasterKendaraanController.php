@@ -14,8 +14,9 @@ class MasterKendaraanController extends Controller
         */
         public function index()
         {
-            $datakendaraan = MasterKendaraan::paginate(4);
-            return view('master.masterkendaraan.index', compact(['datakendaraan']));
+            $cek = MasterKendaraan::count();
+            $datakendaraan = MasterKendaraan::all();
+            return view('master.masterkendaraan.index', compact(['datakendaraan','cek']));
         }
         /**
         * Show the form for creating a new resource.
@@ -35,22 +36,28 @@ class MasterKendaraanController extends Controller
         public function store(Request $request)
         {
         $request->validate([
-        'mk_nama_kendaraan' => 'required|min:5|max:20',
+        'bahan_bakar' => 'required|regex:/^[0-9]+$/|max:15',
+        'kilometer' => 'required|regex:/^[0-9]+$/|max:15',
+        'kondisi_lain' => 'required',
+        'nama_kendaraan' => 'required|min:3|max:100',
+        'no_polisi' => 'required|min:5|max:10',
+        'mk_jenis' => 'required',
+        'merk' => 'required|max:20',
+        'warna' => 'required|max:20',
+        'mk_perlengkapan' => 'required',
         ]);
         $kendaraan = new MasterKendaraan();
-        $kendaraan->mk_nama_kendaraan = $request->mk_nama_kendaraan;
-        $kendaraan->mk_no_polisi = $request->mk_no_polisi;
+        $kendaraan->mk_bahan_bakar = $request->bahan_bakar;
+        $kendaraan->mk_kilometer = $request->kilometer;
+        $kendaraan->mk_kondisi_lain = $request->kondisi_lain;
+        $kendaraan->mk_nama_kendaraan = $request->nama_kendaraan;
+        $kendaraan->mk_no_polisi = $request->no_polisi;
         $kendaraan->mk_jenis = $request->mk_jenis;
-        $kendaraan->mk_merk = $request->mk_merk;
-        $kendaraan->mk_warna = $request->mk_warna;
-        $kendaraan->mk_perlengkapan = $request->mk_perlengkapan;
-        $kendaraan->mk_status = $request->mk_status;
-        $kendaraan->mk_bahan_bakar = $request->mk_bahan_bakar;
-        $kendaraan->mk_kilometer = $request->mk_kilometer;
-        $kendaraan->mk_kondisi_lain = $request->mk_kondisi_lain;
+        $kendaraan->mk_merk = $request->merk;
+        $kendaraan->mk_warna = $request->warna;
         $kendaraan->save();
         Alert::success('Berhasil', 'Data Berhasil Ditambahkan');
-        return redirect()->route('master_kendaraan.index');
+        return redirect()->route('app_kendaraan.index');
         }
         /**
         * Display the specified resource.
@@ -58,10 +65,17 @@ class MasterKendaraanController extends Controller
         * @param  \App\MasterKendaraan  $pic
         * @return \Illuminate\Http\Response
         */
-        public function show(MasterKendaraan $pic)
+        // public function show(MasterKendaraan $pic)
+        // {
+        // // return view('',compact(''));
+        // }
+        public function show($id)
         {
-        // return view('',compact(''));
+            $kendaraan = MasterKendaraan::find($id);
+            return view('master.masterkendaraan.show',compact('kendaraan'));
+            // return view('master.masterkendaraan.editstatus',compact('kendaraan'));
         }
+
         /**
         * Show the form for editing the specified resource.
         *
@@ -84,53 +98,29 @@ class MasterKendaraanController extends Controller
         public function update(Request $request, $id)
         {
         $request->validate([
-        'mk_nama_kendaraan' => 'required|min:5|max:15',
+        // 'bahan_bakar' => 'regex:/^[0-9]+$/|max:15',
+        // 'kilometer' => 'regex:/^[0-9]+$/|max:15',
+        // 'kondisi_lain' => 'required',
+        // 'nama_kendaraan' => 'required|min:3|max:100',
+        // 'no_polisi' => 'required|min:5|max:10',
+        // 'mk_jenis' => 'required',
+        // 'merk' => 'required|max:50',
+        // 'warna' => 'required|max:50',
+        // 'mk_perlengkapan' => 'required',
         ]);
         $kendaraan = MasterKendaraan::find($id);
-        $kendaraan->mk_nama_kendaraan = $request->mk_nama_kendaraan;
-        $kendaraan->mk_no_polisi = $request->mk_no_polisi;
+        $kendaraan->mk_bahan_bakar = $request->bahan_bakar;
+        $kendaraan->mk_kilometer = $request->kilometer;
+        $kendaraan->mk_kondisi_lain = $request->kondisi_lain;
+        $kendaraan->mk_nama_kendaraan = $request->nama_kendaraan;
+        $kendaraan->mk_no_polisi = $request->no_polisi;
         $kendaraan->mk_jenis = $request->mk_jenis;
-        $kendaraan->mk_merk = $request->mk_merk;
-        $kendaraan->mk_warna = $request->mk_warna;
-        $kendaraan->mk_perlengkapan = $request->mk_perlengkapan;
-        $kendaraan->mk_status = $request->mk_status;
-        $kendaraan->mk_bahan_bakar = $request->mk_bahan_bakar;
-        $kendaraan->mk_kilometer = $request->mk_kilometer;
-        $kendaraan->mk_kondisi_lain = $request->mk_kondisi_lain;
+        $kendaraan->mk_merk = $request->merk;
+        $kendaraan->mk_warna = $request->warna;
         $kendaraan->save();
         Alert::success('Berhasil', 'Data Berhasil Diedit');
         return redirect()->route('master_kendaraan.index');
         }
-
-        // public function show($id)
-        // {
-        //     $kendaraan = MasterKendaraan::find($id);
-        //     return view('master.masterkendaraan.editstatus',compact('kendaraan'));
-        // }
-
-        /**
-        * Update the specified resource in storage.
-        *
-        * @param  \Illuminate\Http\Request  $request
-        * @param  \App\MasterKendaraan  $pic
-        * @return \Illuminate\Http\Response
-        */
-        // public function update(Request $request, $id)
-        // {
-        // $request->validate([
-        // 'mk_nama_kendaraan' => 'required|min:5|max:15',
-        // ]);
-        // $kendaraan = MasterKendaraan::find($id);
-        // $kendaraan->mk_nama_kendaraan = $request->mk_nama_kendaraan;
-        // $kendaraan->mk_no_polisi = $request->mk_no_polisi;
-        // $kendaraan->mk_jenis = $request->mk_jenis;
-        // $kendaraan->mk_merk = $request->mk_merk;
-        // $kendaraan->mk_warna = $request->mk_warna;
-        // $kendaraan->mk_perlengkapan = $request->mk_perlengkapan;
-        // $kendaraan->save();
-        // Alert::success('Berhasil', 'Data Berhasil Diedit');
-        // return redirect()->route('master_kendaraan.index');
-        // }
 
         /**
         * Remove the specified resource from storage.

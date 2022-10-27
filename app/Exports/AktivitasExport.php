@@ -12,6 +12,6 @@ class AktivitasExport implements FromCollection
     */
     public function collection()
     {
-        return Aktivitas::all();
+        return Aktivitas::all('title','start_date','prioritas','deskripsi');
     }
 }

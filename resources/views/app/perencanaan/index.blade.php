@@ -1,57 +1,54 @@
 @extends('layouts.main')
-
 @section('content')
-
 @include('sweetalert::alert')
 
-<div class="container-fluid p-0">
-  <div class="card">
-    <div class="card-header">
-      <h6 class="m-0 font-weight-bold text-primary">List Perencanaan Aktivitas</h6>
+<div class="container-fluid px-0">
+  <div class="card" data-aos="fade-up" data-aos-delay="50">
+    <div class="card-header px-sm-3 px-1">
+      <h6 class="m-0 font-weight-bold text-primary" data-aos="fade-right" data-aos-delay="100">List Perencanaan Aktivitas</h6>
     </div>
-    <div class="row d-flex p-3">
-      {{-- management --}}
+    <div class="row d-flex px-2 pb-0 pt-2">
+
+      <!-- Management -->
+
       @if(auth()->user()->level == "management")
-      
-      <div class="card-body col-md-6 p-0 mx-2">
+      <div class="card-body col-xl-7 pb-2 px-3" data-aos="fade-left" data-aos-delay="150">
+
+        @if($cek == 0)
+        <div class="col-12 px-0">
+          <div class="card mb-3 border-danger">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12 px-1">
+                  <div class="text-center">
+                    <i class="fas fa-info-circle"></i>
+                    <i>Belum Ada Data Perencanaan Disini</i>
+                  </div>
+                </div>                      
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+
         @foreach ($dataperencanaan as $perencanaan)
         <div class="card mb-3">
-          <div class="card-body">
+          <div class="card-body pt-3 pb-2">
             <div class="row d-flex justify-content-between">
               <div class="">
                 <?php 
-            $string = $perencanaan->ap_bulan;
-            $result = preg_replace("/[^0-9]/", "",$string);
+                $string = $perencanaan->ap_bulan;
+                $result = preg_replace("/[^0-9]/", "",$string);
 
-            $monthnum = $result;
-            $dateObj = DateTime::createFromFormat('!m', $monthnum);
-            $monthName = $dateObj->format('F');
-             ?>
-
-
-
-                <h5 class="card-title ml-3">{{ $monthName.'-'.$perencanaan->ap_tahun }}</h5>
+                $monthnum = $result;
+                $dateObj = DateTime::createFromFormat('!m', $monthnum);
+                $monthName = $dateObj->format('F');
+                ?>
+                <h5 class="card-title">{{ $monthName.'-'.$perencanaan->ap_tahun }}</h5>
               </div>
               <div class="">
-
-                {{-- <a href="{{ route('app_perencanaan.show',$perencanaan->id) }}" class=" btn btn-primary btn-circle">
-                  <i class="fas fa-eye"></i>
-                </a> --}}
-
-                <a href="{{ route('app_perencanaan.show',$perencanaan->id) }}" class=" btn btn-primary btn-circle">
-                  <i class="fas fa-eye"></i>
-                </a>
-                @if(auth()->user()->level == "general-affair")
-
-                <form action="{{ route('app_perencanaan.destroy',$perencanaan->id) }}" method="post" class="d-inline">
-                  @csrf
-                  @method('delete')
-                  <button class="btn btn-danger btn-circle" type="submit">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                  {{-- <input class="btn btn-danger" type="submit" value="Delete" class="fas fa-trash"> --}}
-                </form>
-                @endif
+                <a href="{{ route('app_perencanaan.show',$perencanaan->id) }}" class="btn-sm btn-primary btn-circle">
+                  <i class="fas fa-eye"></i></a>
               </div>
             </div>
           </div>
@@ -60,45 +57,66 @@
         {{ $dataperencanaan->links() }}
       </div>
       @endif
+      
+      <!-- End management -->
+
+
+      <!-- General Affair -->
+
       @if(auth()->user()->level == "general-affair")
-      <div class="card-body col-lg-7 p-0 mx-2">
+      <div class="card-body col-lg-7 pb-2 px-sm-3 px-2">
+        
+        @if($cek == 0)
+        <div class="col-12 px-0">
+          <div class="card mb-3 border-danger">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12 px-1">
+                  <div class="text-center">
+                    <i class="fas fa-info-circle"></i>
+                    <i>Belum Ada List Perencanaan</i>
+                  </div>
+                </div>                      
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+
         @foreach ($dataperencanaan as $perencanaan)
         <div class="card mb-3">
-          <div class="card-body">
-            <div class="row d-flex justify-content-between">
-              <div class="">
+          <div class="card-body pt-3 pb-2">
+            <div class="row d-flex justify-content-between px-0">
+              <div class="col-sm-5 px-1 py-1">
                 <?php 
-            $string = $perencanaan->ap_bulan;
-            $result = preg_replace("/[^0-9]/", "",$string);
+                $string = $perencanaan->ap_bulan;
+                $result = preg_replace("/[^0-9]/", "",$string);
 
-            $monthnum = $result;
-            $dateObj = DateTime::createFromFormat('!m', $monthnum);
-            $monthName = $dateObj->format('F');
-             ?>
-
-
-
-                <h5 class="card-title ml-3">{{ $monthName.'-'.$perencanaan->ap_tahun }}</h5>
+                $monthnum = $result;
+                $dateObj = DateTime::createFromFormat('!m', $monthnum);
+                $monthName = $dateObj->format('F');
+                // use Carbon\Carbon;
+                // $bulan = Carbon::parse($result)->translatedFormat('F');
+                // $bulan = $result->translatedFormat('F');
+                ?>
+                <h5 class="card-title">{{ $monthName.'-'.$perencanaan->ap_tahun }}</h5>
               </div>
-              <div class="">
-
-                <a href="{{ route('app_perencanaan.show',$perencanaan->id) }}" class=" btn btn-primary btn-circle">
+              <div class="py-1 px-1">
+                <a href="{{ route('app_perencanaan.show',$perencanaan->id) }}" class="btn-sm btn-info btn-circle"  data-toggle="tooltip" data-placement="left" title="Lihat">
                   <i class="fas fa-eye"></i>
                 </a>
-
-                <a href="/perencanaan/list" class=" btn btn-success btn-circle">
-                  <i class="fas fa-calendar"></i>
+                <a href="{{ route('app_perencanaan.edit',$perencanaan->id) }}" class="btn-sm btn-success btn-circle"  data-toggle="tooltip" data-placement="left" title="Unduh">
+                  <i class="fas fa-download"></i>
                 </a>
-                @if(auth()->user()->level == "general-affair")
-
                 <form action="{{ route('app_perencanaan.destroy',$perencanaan->id) }}" method="post" class="d-inline">
                   @csrf
                   @method('delete')
-                  <button class="btn btn-danger btn-circle" type="submit">
+                  
+                  <button type="submit" class="btn-sm border-0 btn-circle btn-danger btn-flat show_confirm" data-toggle="tooltip" title="Delete">
                     <i class="fas fa-trash"></i>
                   </button>
-                </form>
-                @endif
+                  
+                  </form>
               </div>
             </div>
           </div>
@@ -106,17 +124,18 @@
         @endforeach
         {{ $dataperencanaan->links() }}
       </div>
-      @endif
-      
-    @if(auth()->user()->level == "general-affair")
-      <div class="card col-md-4 p-0 mx-2 h-25 ml-5">
-        <div class="card-header px-2">
-          <h6 class="m-0 font-weight-bold text-primary">Tambah List Perencanaan</h6>
-        </div>
-        <form class="ml-2 mr-2" action="{{ route('app_perencanaan.store') }}" method="POST" enctype="multipart/form-data">
-          @csrf
-              <label class="form-label mt-3">Bulan</label>
-              <select name="ap_bulan" class="custom-select custom-select-md mb-3">
+
+      <div class="card-body col-lg-5 pb-2 mb-2 pr-sm-4 pr-2 pl-sm-2 pl-2">
+        <div class="card">
+          <div class="card-header px-sm-3 px-2">
+            <h6 class="font-weight-bold text-primary">Tambah List Perencanaan</h6>
+          </div>
+          <div class="card-body pt-3 px-sm-3 px-2">
+            <form class="px-0" action="{{ route('app_perencanaan.store') }}" method="POST" enctype="multipart/form-data">
+              @csrf
+              <label class="form-label">Bulan</label>
+              <select name="ap_bulan" required class="custom-select custom-select-md mb-3">
+                <option value="">Pilih Bulan</option>
                 <option value="-01">Januari</option>
                 <option value="-02">Februari</option>
                 <option value="-03">Maret</option>
@@ -130,97 +149,24 @@
                 <option value="-11">November</option>
                 <option value="-12">Desember</option>
               </select>
-              <label class="form-label mt-3">Tahun</label>
-
-              <input name="ap_tahun" type="text" class="form-control" required>                 
-              <button type="submit" class="btn btn-success my-4">
+              <label class="form-label">Tahun</label>
+              <input name="ap_tahun" min="1" type="number" class="form-control @error('ap_tahun') is-invalid @enderror" required autofocus value="{{ old('ap_tahun') }}">
+              @error('ap_tahun')
+                <div class="invalid-feedback">
+                  {{ $message }}
+                </div>
+              @enderror                 
+              <button type="submit" class="btn btn-success mt-4">
                 <i class="fa fa-plus-circle"></i>
                 Tambah
               </button>
-
-              {{-- <input name="ap_tahun" type="number" class="form-control" required>                 
-          <button type="submit" class="btn btn-primary my-3">Tambah</button> --}}
-
-        </form>
+            </form>
+          </div>
+        </div>
       </div>
       @endif
     </div>
   </div>
 </div>
- 
-
 @endsection
-
-{{-- @extends('layouts.main')
-
-
-@section('content')
-
-@include('sweetalert::alert')
-<div class="container-fluid">
-  <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">List Perencanaan Aktivitas</h6>
-    </div>
-    <button class="btn btn-primary mt-3"><a href="{{ route('app_perencanaan.create') }}" class="text-white 
-    text-decoration-none">Tambah</a></button>
-    <div class="row">
-      <div class="card-body col-md-7 ml-3">
-        @foreach ($dataperencanaan as $perencanaan)
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="row">
-            <h5 class="card-title">{{ $perencanaan->ap_bulan.'-'.$perencanaan->ap_tahun }}</h5>
-            <a href="{{ route('app_perencanaan.show',$perencanaan->id) }}" class=" btn btn-primary">Lihat</a>
-            <form action="{{ route('app_perencanaan.destroy',$perencanaan->id) }}" method="post" class="d-inline">
-                      @csrf
-                      @method('delete')
-                <input class="btn btn-danger" type="submit" value="Delete">
-            </form>
-          </div>
-          </div>
-        </div>
-        @endforeach
-        {{ $dataperencanaan->links() }}
-                <label class="form-label mt-3">Tahun</label>
-               <input name="ap_tahun" type="number" class="form-control" required>                 
-           <button type="submit" class="btn btn-primary mt-3">Tambah</button>
-       </form>
-      </div>
-    
-      <div class="card mt-3 ml-5 mb-3">
-      <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Tambah List Perencanaan</h6>
-      </div>
-          <form class="ml-2 mr-2" action="{{ route('app_perencanaan.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-                <label class="form-label mt-3">Bulan</label>
-                <select name="ap_bulan" class="custom-select custom-select-md mb-3">
-                  <option value="-01">Januari</option>
-                  <option value="-02">Februari</option>
-                  <option value="-03">Maret</option>
-                  <option value="-04">april</option>
-                  <option value="-05">mei</option>
-                  <option value="-06">juni</option>
-                  <option value="-07">Juli</option>
-                  <option value="-08">Agustus</option>
-                  <option value="-09">September</option>
-                  <option value="-10">Oktober</option>
-                  <option value="-11">November</option>
-                  <option value="-12">Desember</option>
-                </select>
-
-                  <label class="form-label mt-3">Tahun</label>
-                <input name="ap_tahun" type="text" class="form-control" required>                 
-            <button type="submit" class="btn btn-primary mt-3">Tambah</button>
-          </form>
-        </div>
-    </div>
-  </div>
-</div>
-</div>
-
-@endsection --}}
-
-
 

@@ -15,8 +15,9 @@ class MasterVendorController extends Controller
         */
         public function index()
         {
-            $datavendor = MasterVendor::paginate(4);
-            return view('master.mastervendor.index', compact(['datavendor']));
+            $cek = MasterVendor::count();
+            $datavendor = MasterVendor::all();
+            return view('master.mastervendor.index', compact(['datavendor','cek']));
         }
         /**
         * Show the form for creating a new resource.
@@ -36,8 +37,8 @@ class MasterVendorController extends Controller
         public function store(Request $request)
         {
         $request->validate([
-        'mv_nama_vendor' => 'required|min:5|max:30',
-        'mv_lokasi' => 'required|min:5|max:200',
+        'mv_nama_vendor' => 'required|max:200',
+        'mv_lokasi' => 'required|max:200',
         ]);
         $mastervendor = new MasterVendor();
         $mastervendor->mv_nama_vendor = $request->mv_nama_vendor;

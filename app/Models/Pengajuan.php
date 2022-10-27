@@ -18,5 +18,9 @@ class Pengajuan extends Model
     {
         return $this->belongsTo('App\Models\MasterPic', 'ap_mp_id');
     }
+    public function jenispengajuan()
+    {
+        return $this->belongsTo('App\Models\MasterJenisPengajuan', 'ap_mjp_id');
+    }
 
 }

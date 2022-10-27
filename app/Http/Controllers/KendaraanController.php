@@ -8,6 +8,7 @@ use App\Models\Kendaraan;
 use App\Models\MasterPic;
 use App\Models\MasterKendaraan;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Auth;
 
 class KendaraanController extends Controller
 {
@@ -18,10 +19,11 @@ class KendaraanController extends Controller
         */
         public function index()
         {
-            $kendaraan = Kendaraan::with('namaKendaraan','pic')->paginate(4);
-            $datakendaraan = MasterKendaraan::paginate(3);
+            $cek = Kendaraan::count();
+            $kendaraan = Kendaraan::all();
+            $datakendaraan = MasterKendaraan::all();
             $now = Carbon::now()->toDAteString();
-            return view('app.kendaraan.index', compact(['kendaraan','datakendaraan','now']));
+            return view('app.kendaraan.index', compact(['kendaraan','datakendaraan','now','cek']));
         }
         /**
         * Show the form for creating a new resource.
@@ -35,7 +37,7 @@ class KendaraanController extends Controller
         return view('app.kendaraan.create', compact(['namaKendaraan','datapic']));
         }
         /**
-        * Store a newly created resource in storage.
+        * Store a newly created resource in storage.    
         *
         * @param  \Illuminate\Http\Request  $request
         * @return \Illuminate\Http\Response
@@ -47,7 +49,6 @@ class KendaraanController extends Controller
         //     'ak_pengguna'=>'required',
         //     'ak_tanggal_mulai'=>'min:2|max:100', 
         //     'as_harga'=>'required|min:2|max:100', 
-        //     'ak_kondisi'=>'min:2|max:100', 
         //     'ak_lokasi_tujuan'=>'min:2|max:100', 
         // ]);
 
@@ -56,14 +57,25 @@ class KendaraanController extends Controller
         $datakendaraan->ak_pengguna = $request->ak_pengguna;
         $datakendaraan->ak_tanggal_mulai = $request->ak_tanggal_mulai;
         $datakendaraan->ak_jam = $request->ak_jam;
-        $datakendaraan->ak_mp_id = $request->ak_mp_id;
-        $datakendaraan->ak_kondisi = $request->ak_kondisi;
+        $datakendaraan->ak_tanggal_selesai = $request->ak_tanggal_selesai;
+        $datakendaraan->ak_jam_selesai = $request->ak_jam_selesai;
         $datakendaraan->ak_lokasi_tujuan = $request->ak_lokasi_tujuan;
         $datakendaraan->ak_tujuan_pemakaian = $request->ak_tujuan_pemakaian;
         $datakendaraan->save();
 
-        Alert::success('Berhasil', 'Data Berhasil Ditambahkan');
-        return redirect()->route('app_kendaraan.index');
+        Alert::success('Berhasil', 'Data Berhasil Dikirim');
+        $cek = Kendaraan::count();
+        $namaKendaraan = MasterKendaraan::all();
+        $datapic = Masterpic::all();
+        if(auth()->user()->level == "pegawai"){
+          $datakendaraan = MasterKendaraan::paginate(8);
+          $pengguna = Auth::user()->name;
+          $booking = Kendaraan::with('namaKendaraan','pic')->Where('ak_pengguna',$pengguna)->get(); 
+            return view('home',compact(['datakendaraan','booking','cek']));
+        }else{
+            return redirect()->route('app_kendaraan.index');
+        } 
+        
     }
         /**
         * Display the specified resource.
@@ -71,9 +83,12 @@ class KendaraanController extends Controller
         * @param  \App\MasterPic  $pic
         * @return \Illuminate\Http\Response
         */
-        public function show(MasterPic $pic)
+        public function show($id)
         {
-        // return view('',compact(''));
+            $namaKendaraan = MasterKendaraan::all();
+            $pic = MasterPic::all();
+            $kendaraan = Kendaraan::find($id);
+            return view('app.kendaraan.show', compact(['kendaraan','namaKendaraan','pic']));
         }
         /**
         * Show the form for editing the specified resource.
@@ -105,7 +120,6 @@ class KendaraanController extends Controller
         $kendaraan->ak_pengguna = $request->ak_pengguna;
         $kendaraan->ak_tanggal_mulai = $request->ak_tanggal_mulai;
         $kendaraan->ak_jam = $request->ak_jam;
-        $kendaraan->ak_mp_id = $request->ak_mp_id;
         $kendaraan->ak_kondisi = $request->ak_kondisi;
         $kendaraan->ak_lokasi_tujuan = $request->ak_lokasi_tujuan;
         $kendaraan->ak_tujuan_pemakaian = $request->ak_tujuan_pemakaian;
